@@ -37,6 +37,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# analytics store (written at runtime)
+/data/analytics.json
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import { site } from "@/lib/content";
 import { Preloader } from "@/components/preloader";
+import { AnalyticsWidget } from "@/components/analytics-widget";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -108,6 +109,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         <Preloader />
         {children}
+        <AnalyticsWidget />
       </body>
     </html>
   );
