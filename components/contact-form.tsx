@@ -26,7 +26,10 @@ export function ContactForm() {
     if (company) return;
 
     if (!name || !email || !message) {
-      setStatus({ kind: "error", message: "Name, email, and a note are required." });
+      setStatus({
+        kind: "error",
+        message: "Name, email, and a note are required.",
+      });
       return;
     }
     if (!isValidEmail(email)) {
@@ -61,15 +64,10 @@ export function ContactForm() {
         return;
       }
 
-      const href =
-        json.mailto || mailtoHref(site.email, name, email, message);
+      const href = json.mailto || mailtoHref(site.email, name, email, message);
 
       if (json.channel === "mailto" || !json.ok) {
-        window.location.href = href;
-        setStatus({
-          kind: "mailto",
-          href,
-        });
+        setStatus({ kind: "mailto", href });
         return;
       }
 
@@ -79,7 +77,6 @@ export function ContactForm() {
       });
     } catch {
       const href = mailtoHref(site.email, name, email, message);
-      window.location.href = href;
       setStatus({ kind: "mailto", href });
     }
   }
@@ -152,12 +149,14 @@ export function ContactForm() {
         ) : null}
         {status.kind === "mailto" ? (
           <p className="text-ink-soft">
-            Message was not sent from this site — your email client should open
-            with a draft. If it doesn’t, write directly to{" "}
-            <a className="text-accent underline-offset-4 hover:underline" href={`mailto:${site.email}`}>
-              {site.email}
-            </a>
-            .
+            Couldn’t send from the site.{" "}
+            <a
+              className="text-accent underline-offset-4 hover:underline"
+              href={status.href}
+            >
+              Open a draft to {site.email}
+            </a>{" "}
+            instead.
           </p>
         ) : null}
         {status.kind === "error" ? (

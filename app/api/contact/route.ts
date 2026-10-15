@@ -5,6 +5,8 @@ import { isValidEmail, mailtoHref } from "@/lib/utils";
 
 export const runtime = "nodejs";
 
+const SANDBOX_FROM = "Trust Williams <onboarding@resend.dev>";
+
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null;
@@ -17,6 +19,23 @@ type Payload = {
 
 function clip(value: unknown, max: number) {
   return String(value ?? "").trim().slice(0, max);
+}
+
+function formspreeId(raw: string | undefined) {
+  if (!raw) return null;
+  const trimmed = raw.trim();
+  const fromUrl = trimmed.match(/formspree\.io\/f\/([^/?#]+)/i);
+  if (fromUrl) return fromUrl[1];
+  if (/^https?:\/\//i.test(trimmed)) return null;
+  return trimmed;
+}
+
+function isUnverifiedDomain(message: string) {
+  return /not verified|domain is not verified|domain mismatch/i.test(message);
+}
+
+function isSandboxRecipient(message: string) {
+  return /only send testing emails|you can only send to|own email/i.test(message);
 }
 
 export async function POST(req: Request) {
@@ -45,54 +64,82 @@ export async function POST(req: Request) {
   const mailto = mailtoHref(site.email, name, email, message);
   const to = process.env.CONTACT_TO ?? site.email;
   const text = `${message}\n\n— ${name} (${email})`;
+  const fingerprint = Buffer.from(`${email}|${name}|${message}`)
+    .toString("base64url")
+    .slice(0, 100);
 
   if (resend) {
-    const from = process.env.RESEND_FROM ?? "Portfolio <onboarding@resend.dev>";
-    const key = `portfolio-contact/${Buffer.from(`${email}|${name}|${message}`).toString("base64url").slice(0, 120)}`;
-    const { error } = await resend.emails.send(
-      {
-        from,
-        to: [to],
-        replyTo: email,
-        subject: `Portfolio — note from ${name}`,
-        text,
-      },
-      { idempotencyKey: key },
-    );
+    const attempts: Array<{ from: string; to: string; label: string }> = [];
+    const seen = new Set<string>();
 
-    if (error) {
-      return NextResponse.json({
-        ok: false,
-        channel: "mailto",
-        mailto,
-        error: error.message,
-      });
+    function enqueue(from: string, recipient: string, label: string) {
+      const id = `${from}|${recipient}|${label}`;
+      if (seen.has(id)) return;
+      seen.add(id);
+      attempts.push({ from, to: recipient, label });
     }
 
-    return NextResponse.json({ ok: true, channel: "resend" });
+    enqueue(process.env.RESEND_FROM ?? SANDBOX_FROM, to, "configured");
+
+    async function sendAttempt(from: string, recipient: string, label: string) {
+      return resend!.emails.send(
+        {
+          from,
+          to: [recipient],
+          replyTo: email,
+          subject: `Portfolio — note from ${name}`,
+          text,
+        },
+        { idempotencyKey: `portfolio-contact/${fingerprint}/${label}`.slice(0, 256) },
+      );
+    }
+
+    let lastError: string | undefined;
+    for (let i = 0; i < attempts.length; i++) {
+      const attempt = attempts[i];
+      const { error } = await sendAttempt(attempt.from, attempt.to, attempt.label);
+      if (!error) {
+        return NextResponse.json({ ok: true, channel: "resend" });
+      }
+
+      lastError = error.message;
+      console.error("Resend contact send failed:", error.message);
+
+      if (isUnverifiedDomain(error.message) && attempt.from !== SANDBOX_FROM) {
+        enqueue(SANDBOX_FROM, attempt.to, "sandbox");
+      }
+      if (
+        (isUnverifiedDomain(error.message) || isSandboxRecipient(error.message)) &&
+        attempt.to.toLowerCase() !== site.email.toLowerCase()
+      ) {
+        enqueue(SANDBOX_FROM, site.email, "sandbox-account");
+      }
+    }
+
+    const formId = formspreeId(process.env.FORMSPREE_FORM_ID);
+    if (formId) {
+      const sent = await sendFormspree(formId, name, email, message);
+      if (sent) return NextResponse.json({ ok: true, channel: "formspree" });
+    }
+
+    return NextResponse.json({
+      ok: false,
+      channel: "mailto",
+      mailto,
+      error: lastError,
+    });
   }
 
-  const formspree = process.env.FORMSPREE_FORM_ID;
-  if (formspree) {
-    const res = await fetch(`https://formspree.io/f/${formspree}`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email, message, _replyto: email }),
+  const formId = formspreeId(process.env.FORMSPREE_FORM_ID);
+  if (formId) {
+    const sent = await sendFormspree(formId, name, email, message);
+    if (sent) return NextResponse.json({ ok: true, channel: "formspree" });
+    return NextResponse.json({
+      ok: false,
+      channel: "mailto",
+      mailto,
+      error: "Formspree rejected the request.",
     });
-
-    if (!res.ok) {
-      return NextResponse.json({
-        ok: false,
-        channel: "mailto",
-        mailto,
-        error: "Formspree rejected the request.",
-      });
-    }
-
-    return NextResponse.json({ ok: true, channel: "formspree" });
   }
 
   return NextResponse.json({
@@ -100,4 +147,21 @@ export async function POST(req: Request) {
     channel: "mailto",
     mailto,
   });
+}
+
+async function sendFormspree(
+  formId: string,
+  name: string,
+  email: string,
+  message: string,
+) {
+  const res = await fetch(`https://formspree.io/f/${formId}`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name, email, message, _replyto: email }),
+  });
+  return res.ok;
 }
