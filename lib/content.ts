@@ -146,7 +146,7 @@ export const capabilities: Capability[] = [
   {
     title: "Full-stack product",
     description:
-      "Own the storefront-to-admin path: auth, data, dashboards, and a UI that still works on a phone. Built this way on Nexus Gadgets and Core Wealth Market.",
+      "Own the storefront-to-admin path: auth, data, dashboards, and a UI that still works on a phone. Built this way on BuyFirst and Core Wealth Market.",
     stack: ["Next.js", "Node.js", "MySQL"],
     command: "trust ship --stack next,node,mysql --ssr",
   },
@@ -250,8 +250,8 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: "nexus",
-    title: "Nexus Gadgets",
+    id: "buyfirst",
+    title: "BuyFirst",
     type: "Personal",
     category: "Commerce",
     language: "Next.js",
@@ -259,14 +259,14 @@ export const projects: Project[] = [
     hoverLine:
       "Electronics storefront to fulfillment — cart, checkout, auth, admin.",
     story:
-      "I wanted a complete commerce loop for gadgets and electronics, not a catalog demo. Nexus Gadgets covers browsing, search, filtering, a persistent cart, checkout, session-based auth, and dashboards so shoppers can track orders and manage accounts. An admin surface handles product and image management, user monitoring, and order status across fulfillment. The stack is Next.js (SSR), a Node.js API, and MySQL, with a responsive, accessible storefront on mobile and desktop.",
+      "I wanted a complete commerce loop for gadgets and electronics, not a catalog demo. BuyFirst covers browsing, search, filtering, a persistent cart, checkout, session-based auth, and dashboards so shoppers can track orders and manage accounts. An admin surface handles product and image management, user monitoring, and order status across fulfillment. The stack is Next.js (SSR), a Node.js API, and MySQL, with a responsive, accessible storefront on mobile and desktop.",
     stack: ["Next.js", "React", "Node.js", "MySQL"],
     accent: "#c084fc",
-    image: "/work/nexus.jpg",
+    image: "/work/Buy-First.png",
     metric: { value: "SSR", label: "storefront on Next.js" },
     links: [
-      { label: "Live", href: "https://nexus-tech-complete.vercel.app" },
-      { label: "GitHub", href: "https://github.com/Astro-Truzzy/Nexus-Tech-Complete" },
+      { label: "Live", href: "https://dimgrey-turtle-661463.hostingersite.com/" },
+      { label: "GitHub", href: "https://github.com/Astro-Truzzy/Buy-First" },
     ],
   },
   {
@@ -335,7 +335,7 @@ export const experience: Role[] = [
   },
   {
     title: "Full Stack Developer",
-    company: "Nexus Gadgets — E-commerce",
+    company: "BuyFirst — E-commerce",
     location: "Remote",
     start: "05/2026",
     end: "06/2026",
@@ -513,7 +513,7 @@ export const faq: FaqItem[] = [
   },
   {
     q: "How do you like to collaborate?",
-    a: "Most of the client and platform work (Ownbase, Nexus Gadgets, Core Wealth Market, VeluxLink) was remote. Ridely is hybrid out of Benin City. I’ve also taught part-time — I write things down, I show work early, and I stay until the interface matches the requirement.",
+    a: "Most of the client and platform work (Ownbase, BuyFirst, Core Wealth Market, VeluxLink) was remote. Ridely is hybrid out of Benin City. I’ve also taught part-time — I write things down, I show work early, and I stay until the interface matches the requirement.",
   },
   {
     q: "Can I see a résumé?",
