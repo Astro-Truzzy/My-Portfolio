@@ -92,11 +92,11 @@ export const socials: SocialLink[] = [
     label: "GitHub",
     href: "https://github.com/Astro-Truzzy",
   },
-  {
-    label: "LinkedIn",
-    href: "",
-    placeholder: true,
-  },
+  // {
+  //   label: "LinkedIn",
+  //   href: "",
+  //   placeholder: true,
+  // },
 ];
 
 export const hero = {
@@ -105,7 +105,7 @@ export const hero = {
   primaryCta: "Start a conversation",
   secondaryCta: "View work",
   microBar: {
-    years: { value: "2", label: "yrs shipping" },
+    years: { value: "3+", label: "yrs shipping" },
     stack: ["Next.js", "React", "Node", "TS", "RN"],
     education: "B.Sc. Microbiology, UNIBEN ’24",
   },
@@ -136,7 +136,7 @@ export const about = {
 };
 
 export const proof: ProofStat[] = [
-  { value: "2", label: "Years shipping products since founding Ridely (2024)" },
+  { value: "3+", label: "Years shipping products since founding Ridely (2024)" },
   { value: "20+", label: "Students taught frontend at Luzoma Microsystems" },
   { value: "24", label: "Repos connected on Ownbase in the first cycle" },
   { value: "1st", label: "Runner-up, Edo Tech Stars Hackathon (2024)" },
@@ -202,7 +202,7 @@ export const projects: Project[] = [
     stack: ["React Native", "React", "Node.js"],
     accent: "#2ee6c5",
     image: "/work/ridely.png",
-    metric: { value: "30+", label: "waitlist signups in Benin City" },
+    metric: { value: "30+", label: "waitlist signups in PH City" },
     links: [
       { label: "Live", href: "https://ridelyweb.com" },
       { label: "GitHub", href: "https://github.com/Astro-Truzzy/Ridely" },
@@ -245,7 +245,7 @@ export const projects: Project[] = [
     image: "/work/core-wealth.png",
     metric: { value: "33%", label: "client-reported lift in trader earnings" },
     links: [
-       { label: "Live", href: "https://corewealthmarket.com" },
+      //  { label: "Live", href: "https://corewealthmarket.com" },
       { label: "GitHub", href: "https://github.com/Astro-Truzzy/CoreWealthMarket" },
     ],
   },
@@ -254,13 +254,13 @@ export const projects: Project[] = [
     title: "BuyFirst",
     type: "Personal",
     category: "Commerce",
-    language: "Next.js",
+    language: "PHP",
     date: "05/2026 – 06/2026",
     hoverLine:
       "Electronics storefront to fulfillment — cart, checkout, auth, admin.",
     story:
       "I wanted a complete commerce loop for gadgets and electronics, not a catalog demo. BuyFirst covers browsing, search, filtering, a persistent cart, checkout, session-based auth, and dashboards so shoppers can track orders and manage accounts. An admin surface handles product and image management, user monitoring, and order status across fulfillment. The stack is Next.js (SSR), a Node.js API, and MySQL, with a responsive, accessible storefront on mobile and desktop.",
-    stack: ["Next.js", "React", "Node.js", "MySQL"],
+    stack: ["PHP", "CSS", "Stripe", "MySQL"],
     accent: "#c084fc",
     image: "/work/Buy-First.png",
     metric: { value: "SSR", label: "storefront on Next.js" },
@@ -521,7 +521,7 @@ export const faq: FaqItem[] = [
   },
   {
     q: "What’s the fastest way to reach you?",
-    a: `Email ${site.email}. I also listed ${site.phone} on the CV. Code is at github.com/Astro-Truzzy. LinkedIn was not on the résumé — send the URL if you want it on this site.`,
+    a: `Email ${site.email}. I also listed ${site.phone} on the CV. Code is at github.com/Astro-Truzzy.`,
   },
 ];
 
