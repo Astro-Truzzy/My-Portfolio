@@ -77,8 +77,8 @@ export const site = {
   timezone: "Africa/Lagos",
   timezoneAbbr: "WAT",
   availability: "Open to Full-Stack Developer roles",
-  resumeHref: "/Trust-Williams-CV.pdf",
-  resumeFilename: "Trust-Williams-CV.pdf",
+  resumeHref: "/Trust_Williams_Tech_CV.pdf",
+  resumeFilename: "Trust_Williams_Tech_CV.pdf",
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   origin: "Edo State, Nigeria",
 } as const;
